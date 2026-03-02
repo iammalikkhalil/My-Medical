@@ -58,7 +58,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4">
       <Card className="w-full max-w-md p-6">
-        <h1 className="mb-1 text-3xl font-bold">MedKit</h1>
+        <h1 className="mb-1 text-3xl font-bold">💊MediTrack</h1>
         <p className="mb-6 text-sm text-zinc-600">Personal health companion</p>
 
         <form onSubmit={onSubmit} className="space-y-4">

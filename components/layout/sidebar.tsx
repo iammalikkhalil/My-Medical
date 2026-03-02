@@ -39,7 +39,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden h-screen w-72 shrink-0 border-r border-[var(--color-border)] bg-white px-4 py-6 md:flex md:flex-col">
-      <h1 className="mb-6 text-2xl font-bold">MedKit</h1>
+      <h1 className="mb-6 text-2xl font-bold">💊MediTrack</h1>
       <div className="flex-1 space-y-4 overflow-y-auto">
         {navGroups.map((group, idx) => (
           <div key={idx} className="space-y-1 border-t border-[var(--color-border)] pt-3">

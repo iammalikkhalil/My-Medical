@@ -1,4 +1,4 @@
-# MedKit (Medi-Track)
+# 💊MediTrack
 
 Personal Medical Kit Web App built with Next.js App Router, MongoDB, and Mongoose.
 
