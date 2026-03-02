@@ -1,0 +1,74 @@
+[
+  {
+    "_id": { "$oid": "65f100000000000000000001" },
+    "name": "Pain & Fever",
+    "slug": "pain-fever",
+    "emoji": "💊",
+    "description": "Pain and fever medicines",
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "updatedAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "__v": 0
+  },
+  {
+    "_id": { "$oid": "65f100000000000000000002" },
+    "name": "Stomach",
+    "slug": "stomach",
+    "emoji": "🦠",
+    "description": "Stomach relief medicines",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "updatedAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "__v": 0
+  },
+  {
+    "_id": { "$oid": "65f100000000000000000003" },
+    "name": "Allergy",
+    "slug": "allergy",
+    "emoji": "🤧",
+    "description": "Allergy and cold reaction medicines",
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "updatedAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "__v": 0
+  },
+  {
+    "_id": { "$oid": "65f100000000000000000004" },
+    "name": "Supplement",
+    "slug": "supplement",
+    "emoji": "🧴",
+    "description": "Daily support supplements",
+    "sortOrder": 4,
+    "isActive": true,
+    "createdAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "updatedAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "__v": 0
+  },
+  {
+    "_id": { "$oid": "65f100000000000000000005" },
+    "name": "Mental Health",
+    "slug": "mental-health",
+    "emoji": "😣",
+    "description": "Sleep and anxiety support",
+    "sortOrder": 5,
+    "isActive": true,
+    "createdAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "updatedAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "__v": 0
+  },
+  {
+    "_id": { "$oid": "65f100000000000000000006" },
+    "name": "Other",
+    "slug": "other",
+    "emoji": "📦",
+    "description": "Other items",
+    "sortOrder": 99,
+    "isActive": true,
+    "createdAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "updatedAt": { "$date": "2026-03-03T09:00:00.000Z" },
+    "__v": 0
+  }
+]

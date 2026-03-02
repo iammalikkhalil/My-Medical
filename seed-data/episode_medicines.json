@@ -1,0 +1,6 @@
+[
+  { "_id": { "$oid": "65f100000000000000000601" }, "episodeId": { "$oid": "65f100000000000000000401" }, "medicineId": { "$oid": "65f100000000000000000201" }, "medicineName": "Paracetamol 500mg", "isFromKit": true, "createdAt": { "$date": "2026-02-20T09:00:00.000Z" }, "__v": 0 },
+  { "_id": { "$oid": "65f100000000000000000602" }, "episodeId": { "$oid": "65f100000000000000000401" }, "medicineId": null, "medicineName": "ORS Sachet", "isFromKit": false, "createdAt": { "$date": "2026-02-20T10:30:00.000Z" }, "__v": 0 },
+  { "_id": { "$oid": "65f100000000000000000603" }, "episodeId": { "$oid": "65f100000000000000000402" }, "medicineId": { "$oid": "65f100000000000000000204" }, "medicineName": "Cetirizine 10mg", "isFromKit": true, "createdAt": { "$date": "2026-03-02T21:00:00.000Z" }, "__v": 0 },
+  { "_id": { "$oid": "65f100000000000000000604" }, "episodeId": { "$oid": "65f100000000000000000402" }, "medicineId": null, "medicineName": "Steam Inhalation", "isFromKit": false, "createdAt": { "$date": "2026-03-03T06:45:00.000Z" }, "__v": 0 }
+]

@@ -1,0 +1,4 @@
+[
+  { "_id": { "$oid": "65f100000000000000000401" }, "name": "Fever & Headache", "startDate": { "$date": "2026-02-20T08:00:00.000Z" }, "recoveryDate": { "$date": "2026-02-22T18:00:00.000Z" }, "isOngoing": false, "blogId": { "$oid": "65f100000000000000000801" }, "overallEffectiveness": "recovered", "durationDays": 3, "notes": "Hydration and rest helped quickly", "createdAt": { "$date": "2026-02-20T08:00:00.000Z" }, "updatedAt": { "$date": "2026-02-22T18:00:00.000Z" }, "__v": 0 },
+  { "_id": { "$oid": "65f100000000000000000402" }, "name": "Cold & Flu", "startDate": { "$date": "2026-03-02T07:30:00.000Z" }, "recoveryDate": null, "isOngoing": true, "blogId": { "$oid": "65f100000000000000000802" }, "overallEffectiveness": null, "durationDays": null, "notes": "Sore throat in morning and mild congestion", "createdAt": { "$date": "2026-03-02T07:30:00.000Z" }, "updatedAt": { "$date": "2026-03-03T08:00:00.000Z" }, "__v": 0 }
+]
