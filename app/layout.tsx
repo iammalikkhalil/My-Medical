@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "💊MediTrack",
+  title: "MediTrack",
   description: "Personal Medical Kit and Illness Journal",
   icons: {
     icon: "/favicon.ico",
