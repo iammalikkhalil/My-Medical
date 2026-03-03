@@ -1,12 +1,14 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useGlobalNavigationLoader } from "@/components/navigation/global-navigation-loader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiFetch } from "@/lib/client";
 
 type ActiveEpisode = {
@@ -22,14 +24,17 @@ type Medicine = { _id: string; name: string; quantity: number; unit: string };
 
 export default function IllnessActivePage() {
   const router = useRouter();
+  const { startNavigation } = useGlobalNavigationLoader();
   const [episode, setEpisode] = useState<ActiveEpisode | null>(null);
   const [kitMedicines, setKitMedicines] = useState<Medicine[]>([]);
   const [externalForm, setExternalForm] = useState({ medicineName: "", amount: 1, unit: "tablet", notes: "" });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const symptomId = episode?.symptoms?.[0]?._id;
 
   async function load() {
+    setIsLoading(true);
     try {
       const active = await apiFetch<ActiveEpisode | null>("/api/episodes/active");
       setEpisode(active);
@@ -37,10 +42,15 @@ export default function IllnessActivePage() {
       if (active?.symptoms?.length) {
         const medicines = await apiFetch<Medicine[]>(`/api/medicines?symptomId=${active.symptoms[0]._id}`);
         setKitMedicines(medicines);
+      } else {
+        setKitMedicines([]);
       }
+
       setError("");
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -118,11 +128,23 @@ export default function IllnessActivePage() {
         method: "POST",
         body: JSON.stringify({ overallEffectiveness: effectiveness }),
       });
+      startNavigation();
       router.push(`/illness/${episode._id}`);
       router.refresh();
     } catch (e) {
       setError((e as Error).message);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <Card>
+        <Skeleton className="mb-2 h-9 w-56" />
+        <Skeleton className="mb-2 h-4 w-48" />
+        <Skeleton className="mb-2 h-12 w-full" />
+        <Skeleton className="h-12 w-full" />
+      </Card>
+    );
   }
 
   if (!episode) {
@@ -138,9 +160,7 @@ export default function IllnessActivePage() {
           <Link href="/blogs">
             <Button variant="ghost">Read Guide</Button>
           </Link>
-          <Button variant="secondary" onClick={() => closeEpisode("recovered")}>
-            I&apos;m Better
-          </Button>
+          <Button variant="secondary" onClick={() => closeEpisode("recovered")}>I&apos;m Better</Button>
         </div>
       </Card>
 
@@ -207,9 +227,7 @@ export default function IllnessActivePage() {
             onChange={(e) => setExternalForm((prev) => ({ ...prev, notes: e.target.value }))}
             className="md:col-span-2"
           />
-          <Button type="submit" className="md:col-span-2">
-            Log This Dose
-          </Button>
+          <Button type="submit" className="md:col-span-2">Log This Dose</Button>
         </form>
       </Card>
 
@@ -224,4 +242,3 @@ export default function IllnessActivePage() {
     </div>
   );
 }
-

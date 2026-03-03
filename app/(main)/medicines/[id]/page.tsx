@@ -1,11 +1,13 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import { useGlobalNavigationLoader } from "@/components/navigation/global-navigation-loader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiFetch } from "@/lib/client";
 
 type MedicineDetail = {
@@ -27,16 +29,21 @@ type MedicineDetail = {
 export default function MedicineDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const { startNavigation } = useGlobalNavigationLoader();
   const [medicine, setMedicine] = useState<MedicineDetail | null>(null);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const load = useCallback(async () => {
+    setIsLoading(true);
     try {
       const data = await apiFetch<MedicineDetail>(`/api/medicines/${params.id}`);
       setMedicine(data);
       setError("");
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setIsLoading(false);
     }
   }, [params.id]);
 
@@ -91,6 +98,7 @@ export default function MedicineDetailPage() {
 
     try {
       await apiFetch(`/api/medicines/${medicine._id}`, { method: "DELETE" });
+      startNavigation();
       router.push("/medicines");
       router.refresh();
     } catch (e) {
@@ -98,8 +106,19 @@ export default function MedicineDetailPage() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <Card>
+        <Skeleton className="mb-2 h-9 w-64" />
+        <Skeleton className="mb-2 h-4 w-44" />
+        <Skeleton className="mb-2 h-14 w-full" />
+        <Skeleton className="h-14 w-full" />
+      </Card>
+    );
+  }
+
   if (!medicine) {
-    return <Card>{error || "Loading..."}</Card>;
+    return <Card>{error || "Unable to load medicine."}</Card>;
   }
 
   return (
@@ -153,4 +172,3 @@ export default function MedicineDetailPage() {
     </div>
   );
 }
-

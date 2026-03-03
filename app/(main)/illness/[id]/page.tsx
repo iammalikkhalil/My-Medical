@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiFetch } from "@/lib/client";
 
 type Dose = {
@@ -33,11 +34,16 @@ export default function IllnessDetailPage() {
   const params = useParams<{ id: string }>();
   const [episode, setEpisode] = useState<Episode | null>(null);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
+    setError("");
+
     void apiFetch<Episode>(`/api/episodes/${params.id}`)
       .then(setEpisode)
-      .catch((e) => setError((e as Error).message));
+      .catch((e) => setError((e as Error).message))
+      .finally(() => setIsLoading(false));
   }, [params.id]);
 
   const totals = useMemo(() => {
@@ -55,8 +61,19 @@ export default function IllnessDetailPage() {
     return { kit, external };
   }, [episode]);
 
+  if (isLoading) {
+    return (
+      <Card>
+        <Skeleton className="mb-2 h-9 w-64" />
+        <Skeleton className="mb-2 h-4 w-48" />
+        <Skeleton className="mb-3 h-10 w-full" />
+        <Skeleton className="h-10 w-5/6" />
+      </Card>
+    );
+  }
+
   if (!episode) {
-    return <Card>{error || "Loading..."}</Card>;
+    return <Card>{error || "Episode not found."}</Card>;
   }
 
   return (
@@ -64,7 +81,8 @@ export default function IllnessDetailPage() {
       <Card>
         <h1 className="text-3xl font-bold">{episode.name}</h1>
         <p className="text-sm">
-          {new Date(episode.startDate).toLocaleDateString()} {episode.recoveryDate ? `to ${new Date(episode.recoveryDate).toLocaleDateString()}` : "(ongoing)"}
+          {new Date(episode.startDate).toLocaleDateString()}{" "}
+          {episode.recoveryDate ? `to ${new Date(episode.recoveryDate).toLocaleDateString()}` : "(ongoing)"}
           {episode.durationDays ? ` · ${episode.durationDays} days` : ""}
         </p>
         {episode.overallEffectiveness ? (
@@ -110,4 +128,3 @@ export default function IllnessDetailPage() {
     </div>
   );
 }
-

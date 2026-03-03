@@ -19,13 +19,8 @@ type Blog = {
 
 type Symptom = { _id: string; name: string; emoji: string };
 
-export default function BlogsManagePage() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [symptoms, setSymptoms] = useState<Symptom[]>([]);
-  const [selectedBlogId, setSelectedBlogId] = useState<string>("");
-  const [error, setError] = useState("");
-
-  const [form, setForm] = useState({
+function getInitialForm() {
+  return {
     title: "",
     slug: "",
     emoji: "??",
@@ -34,7 +29,16 @@ export default function BlogsManagePage() {
     sections: [{ id: "first-steps", heading: "First Steps", content: "", isWarning: false, sortOrder: 1 }],
     symptomIds: [] as string[],
     relatedBlogIds: [] as string[],
-  });
+  };
+}
+
+export default function BlogsManagePage() {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [symptoms, setSymptoms] = useState<Symptom[]>([]);
+  const [selectedBlogId, setSelectedBlogId] = useState<string>("");
+  const [error, setError] = useState("");
+
+  const [form, setForm] = useState(getInitialForm);
 
   async function load() {
     try {
@@ -104,18 +108,9 @@ export default function BlogsManagePage() {
     }));
   }
 
-  async function createNew() {
+  function createNew() {
     setSelectedBlogId("");
-    setForm({
-      title: "",
-      slug: "",
-      emoji: "??",
-      estimatedRecovery: "",
-      isPublished: false,
-      sections: [{ id: "first-steps", heading: "First Steps", content: "", isWarning: false, sortOrder: 1 }],
-      symptomIds: [],
-      relatedBlogIds: [],
-    });
+    setForm(getInitialForm());
   }
 
   async function saveBlog(publishNow: boolean) {
@@ -133,6 +128,8 @@ export default function BlogsManagePage() {
       }
 
       await load();
+      setSelectedBlogId("");
+      setForm(getInitialForm());
     } catch (e) {
       setError((e as Error).message);
     }

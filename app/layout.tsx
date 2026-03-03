@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { GlobalNavigationLoaderProvider } from "@/components/navigation/global-navigation-loader";
 import "./globals.css";
 
 const inter = Inter({
@@ -9,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MediTrack",
+  title: "💊MediTrack",
   description: "Personal Medical Kit and Illness Journal",
   icons: {
     icon: "/favicon.ico",
@@ -24,8 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>{children}</body>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <GlobalNavigationLoaderProvider>{children}</GlobalNavigationLoaderProvider>
+      </body>
     </html>
   );
 }
-

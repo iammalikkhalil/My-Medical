@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useGlobalNavigationLoader } from "@/components/navigation/global-navigation-loader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { startNavigation } = useGlobalNavigationLoader();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -20,13 +22,14 @@ export default function LoginPage() {
       .then((r) => r.json())
       .then((payload) => {
         if (payload?.data?.authenticated) {
+          startNavigation();
           router.replace("/");
         }
       })
       .catch(() => {
         // noop
       });
-  }, [router]);
+  }, [router, startNavigation]);
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -46,6 +49,7 @@ export default function LoginPage() {
         return;
       }
 
+      startNavigation();
       router.push("/");
       router.refresh();
     } catch {
@@ -108,4 +112,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

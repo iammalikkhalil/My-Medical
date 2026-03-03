@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiFetch } from "@/lib/client";
 
 type Blog = {
@@ -22,20 +23,48 @@ export default function BlogDetailPage() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [related, setRelated] = useState<Blog[]>([]);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
+    setError("");
+
     void Promise.all([apiFetch<Blog>(`/api/blogs/${params.slug}`), apiFetch<Blog[]>("/api/blogs")])
       .then(([blogData, allBlogs]) => {
         setBlog(blogData);
         setRelated(allBlogs.filter((entry) => entry.slug !== blogData.slug).slice(0, 3));
       })
-      .catch((e) => setError((e as Error).message));
+      .catch((e) => setError((e as Error).message))
+      .finally(() => setIsLoading(false));
   }, [params.slug]);
 
   const toc = useMemo(() => blog?.sections.map((section) => ({ id: section.id, heading: section.heading })) || [], [blog]);
 
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <Card>
+          <Skeleton className="mb-2 h-9 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </Card>
+        <Card>
+          <Skeleton className="mb-2 h-6 w-48" />
+          <Skeleton className="mb-2 h-5 w-full" />
+          <Skeleton className="mb-2 h-5 w-5/6" />
+          <Skeleton className="h-5 w-2/3" />
+        </Card>
+        <Card>
+          <Skeleton className="mb-2 h-8 w-56" />
+          <Skeleton className="mb-2 h-4 w-full" />
+          <Skeleton className="mb-2 h-4 w-full" />
+          <Skeleton className="h-4 w-4/5" />
+        </Card>
+      </div>
+    );
+  }
+
   if (!blog) {
-    return <Card>{error || "Loading..."}</Card>;
+    return <Card>{error || "Blog not found."}</Card>;
   }
 
   return (
@@ -52,7 +81,7 @@ export default function BlogDetailPage() {
         <ul className="space-y-1">
           {toc.map((entry) => (
             <li key={entry.id}>
-              <a href={`#${entry.id}`} className="text-sm underline">
+              <a href={`#${entry.id}`} className="text-sm underline transition hover:opacity-75">
                 {entry.heading}
               </a>
             </li>
@@ -77,17 +106,16 @@ export default function BlogDetailPage() {
           <p className="font-semibold">Related Guides</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {related.map((entry) => (
-              <Link key={entry._id} href={`/blogs/${entry.slug}`} className="rounded-lg border px-3 py-2 text-sm">
+              <Link key={entry._id} href={`/blogs/${entry.slug}`} className="rounded-lg border px-3 py-2 text-sm transition hover:-translate-y-0.5 hover:shadow-sm">
                 {entry.emoji} {entry.title}
               </Link>
             ))}
           </div>
         </div>
-        <Link href="/blogs/manage" className="mt-3 inline-block text-sm font-semibold underline">
+        <Link href="/blogs/manage" className="mt-3 inline-block text-sm font-semibold underline transition hover:opacity-75">
           Edit This Guide
         </Link>
       </Card>
     </div>
   );
 }
-

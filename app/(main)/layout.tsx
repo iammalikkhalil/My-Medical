@@ -1,14 +1,10 @@
-import { redirect } from "next/navigation";
-
-import { getSession } from "@/lib/auth";
 import { AppShell } from "@/components/layout/app-shell";
 
-export default async function MainLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
-  if (!session) {
-    redirect("/login");
-  }
-
-  return <AppShell>{children}</AppShell>;
+export default function MainLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AppShell>
+      <div className="page-enter">{children}</div>
+    </AppShell>
+  );
 }
 

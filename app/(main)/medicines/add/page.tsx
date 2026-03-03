@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useGlobalNavigationLoader } from "@/components/navigation/global-navigation-loader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ type Symptom = { _id: string; name: string; emoji: string };
 
 export default function AddMedicinePage() {
   const router = useRouter();
+  const { startNavigation } = useGlobalNavigationLoader();
   const [categories, setCategories] = useState<Category[]>([]);
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
@@ -47,6 +49,7 @@ export default function AddMedicinePage() {
         method: "POST",
         body: JSON.stringify({ ...form, symptomIds: selectedSymptoms, expiryDate: new Date(form.expiryDate) }),
       });
+      startNavigation();
       router.push("/medicines");
       router.refresh();
     } catch (e) {

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiFetch } from "@/lib/client";
 
 type DashboardPayload = {
@@ -20,11 +21,13 @@ type DashboardPayload = {
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardPayload | null>(null);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     void apiFetch<DashboardPayload>("/api/dashboard")
       .then(setData)
-      .catch((e: Error) => setError(e.message));
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const alerts = useMemo(() => {
@@ -59,7 +62,22 @@ export default function DashboardPage() {
 
       {error ? <Card className="text-[var(--color-danger)]">{error}</Card> : null}
 
-      {data?.activeEpisode ? (
+      {isLoading ? (
+        <>
+          <Card>
+            <Skeleton className="mb-2 h-6 w-40" />
+            <Skeleton className="mb-2 h-10 w-full" />
+            <Skeleton className="h-10 w-2/3" />
+          </Card>
+          <Card>
+            <Skeleton className="mb-2 h-6 w-52" />
+            <Skeleton className="mb-2 h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </Card>
+        </>
+      ) : null}
+
+      {!isLoading && data?.activeEpisode ? (
         <Card className="bg-[var(--color-warning)]">
           <p className="text-xl font-bold">Ongoing Illness: {data.activeEpisode.name}</p>
           <p className="text-sm">Started {new Date(data.activeEpisode.startDate).toLocaleDateString()}</p>
@@ -74,7 +92,7 @@ export default function DashboardPage() {
         </Card>
       ) : null}
 
-      {alerts.length ? (
+      {!isLoading && alerts.length ? (
         <Card>
           <h2 className="mb-2 text-xl font-semibold">Alerts</h2>
           <div className="flex gap-2 overflow-x-auto pb-1">
@@ -90,9 +108,14 @@ export default function DashboardPage() {
       <Card>
         <h2 className="mb-2 text-xl font-semibold">Quick Access Medicines</h2>
         <div className="grid gap-2 md:grid-cols-2">
-          {data?.quickAccess?.length ? (
+          {isLoading ? (
+            <>
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
+            </>
+          ) : data?.quickAccess?.length ? (
             data.quickAccess.map((medicine) => (
-              <Link href={`/medicines/${medicine._id}`} key={medicine._id} className="rounded-lg border p-3">
+              <Link href={`/medicines/${medicine._id}`} key={medicine._id} className="rounded-lg border p-3 transition hover:-translate-y-0.5 hover:shadow-sm">
                 <p className="font-semibold">{medicine.name}</p>
                 <p className="text-sm">
                   {medicine.quantity} {medicine.unit}
@@ -108,7 +131,12 @@ export default function DashboardPage() {
       <Card>
         <h2 className="mb-2 text-xl font-semibold">Recently Used</h2>
         <ul className="space-y-2">
-          {data?.recentDoses?.length ? (
+          {isLoading ? (
+            <>
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
+            </>
+          ) : data?.recentDoses?.length ? (
             data.recentDoses.map((dose) => (
               <li key={dose._id} className="rounded-lg border p-3">
                 <p className="font-semibold">{dose.medicineName}</p>
@@ -126,7 +154,12 @@ export default function DashboardPage() {
       <Card>
         <h2 className="mb-2 text-xl font-semibold">Recent Illness Episodes</h2>
         <ul className="space-y-2">
-          {data?.recentEpisodes?.length ? (
+          {isLoading ? (
+            <>
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
+            </>
+          ) : data?.recentEpisodes?.length ? (
             data.recentEpisodes.map((episode) => (
               <li key={episode._id} className="rounded-lg border p-3">
                 <p className="font-semibold">{episode.name}</p>
@@ -146,4 +179,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

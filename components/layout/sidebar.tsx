@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import { useGlobalNavigationLoader } from "@/components/navigation/global-navigation-loader";
 import { Button } from "@/components/ui/button";
 
 const navGroups = [
@@ -22,17 +24,28 @@ const navGroups = [
     { href: "/out-of-stock", label: "Out of Stock" },
     { href: "/quick-access", label: "Quick Access" },
   ],
-  [
-    { href: "/symptoms/manage", label: "Manage Symptoms" },
-  ],
+  [{ href: "/symptoms/manage", label: "Manage Symptoms" }],
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { startNavigation } = useGlobalNavigationLoader();
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    navGroups.flat().forEach((item) => {
+      router.prefetch(item.href);
+    });
+  }, [router]);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
+    startNavigation();
     router.push("/login");
     router.refresh();
   }
@@ -49,9 +62,16 @@ export function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block rounded-lg px-3 py-2 text-sm font-medium ${
-                    active ? "bg-[var(--color-primary)]" : "hover:bg-[var(--color-bg)]"
-                  }`}
+                  prefetch
+                  onClick={() => {
+                    setPendingHref(item.href);
+                    startNavigation();
+                  }}
+                  onMouseEnter={() => router.prefetch(item.href)}
+                  onTouchStart={() => router.prefetch(item.href)}
+                  className={`block rounded-lg px-3 py-2 text-sm font-medium transition duration-200 active:scale-[0.99] ${
+                    active ? "bg-[var(--color-primary)] shadow-sm" : "hover:bg-[var(--color-bg)]"
+                  } ${pendingHref === item.href ? "opacity-70" : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -66,4 +86,3 @@ export function Sidebar() {
     </aside>
   );
 }
-

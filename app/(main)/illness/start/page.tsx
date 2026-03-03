@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useGlobalNavigationLoader } from "@/components/navigation/global-navigation-loader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ type BlogSuggestion = { _id: string; title: string; slug: string };
 
 export default function IllnessStartPage() {
   const router = useRouter();
+  const { startNavigation } = useGlobalNavigationLoader();
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [name, setName] = useState("");
@@ -88,6 +90,7 @@ export default function IllnessStartPage() {
           notes,
         }),
       });
+      startNavigation();
       router.push(`/illness/active?id=${episode._id}`);
       router.refresh();
     } catch (e) {
